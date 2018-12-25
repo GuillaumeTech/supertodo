@@ -1,5 +1,14 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## About this project
+
+This repo was created to learn more about React and Bulma. Ultimately it should be a Trello like app, with as much lists as you want, thus the name "super-todo"
+
+## Uses
+css-spacing : https://github.com/mrmrs/css-spacing
+Bulma : https://github.com/jgthms/bulma
+React : https://github.com/facebook/react
+
 ## Available Scripts
 
 In the project directory, you can run:
