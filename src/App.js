@@ -124,6 +124,7 @@ class AddsElement extends Component {
     if (this.state.text != "") {
       this.props.addsElement(this.props.parentIndex, this.state.text);
       this.setState({ text: "" });
+      this.refs.field.value=""
     }
   }
 
@@ -137,6 +138,7 @@ class AddsElement extends Component {
               onChange={this.handleChange}
               type="text"
               placeholder="Add an element"
+              ref="field"
             />
           </div>
           <div className="control ">
