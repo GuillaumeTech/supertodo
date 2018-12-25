@@ -13,7 +13,7 @@ class App extends Component {
     this.removeElement = this.removeElement.bind(this);
 
     this.state = {
-      contents: [{title:"test", elements:["bla","bla"]}]
+      contents: []
     };
   }
 
