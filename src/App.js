@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-
 import "./bulma.css";
 import "./App.css";
 import "./spacing.css";
@@ -11,8 +10,10 @@ class App extends Component {
     this.addsElement = this.addsElement.bind(this);
     this.addsList = this.addsList.bind(this);
     this.removeList = this.removeList.bind(this);
+    this.removeElement = this.removeElement.bind(this);
+
     this.state = {
-      contents: []
+      contents: [{title:"test", elements:["bla","bla"]}]
     };
   }
 
@@ -34,9 +35,14 @@ class App extends Component {
 
   removeList(index) {
     let contents = this.state.contents.slice();
-    contents.splice(index,1);
+    contents.splice(index, 1);
     this.setState({ contents: contents });
-    console.log(contents);
+  }
+
+  removeElement(parentIndex, index) {
+    let contents = this.state.contents.slice();
+    contents[parentIndex].elements.splice(index, 1);
+    this.setState({ contents: contents });
   }
 
   render() {
@@ -44,7 +50,7 @@ class App extends Component {
       <div className="App">
         <div className="columns is-vcentered mhx">
           <div className="column">
-            <p className="title is-3 has-text-left mtm ">
+            <p className="title is-3 has-text-left mtm">
               {" "}
               SUPER <br /> TO-DO{" "}
             </p>
@@ -63,6 +69,7 @@ class App extends Component {
               elements={element.elements}
               addsElement={this.addsElement}
               removeList={this.removeList}
+              removeElement={this.removeElement}
             />
           ))}
         </div>
@@ -75,12 +82,11 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-   
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.removeList(this.props.index)
+    this.props.removeList(this.props.index);
   }
 
   render() {
@@ -88,19 +94,19 @@ class List extends Component {
       <div className="column is-4">
         <div className="card pam">
           <div className="columns is-vcentered ">
-          <div className="column">
-            <p className="pvs has-text-left title is-size-5">
-              {this.props.title}
-            </p>
+            <div className="column">
+              <p className="pvs has-text-left title is-size-4">
+                {this.props.title}
+              </p>
             </div>
             <div className="column is-1 prl">
-            <form onSubmit={this.handleSubmit}>
-              <button type="submit" className="delete" />
-            </form>
+              <form onSubmit={this.handleSubmit}>
+                <button type="submit" className="delete" />
+              </form>
             </div>
           </div>
           {this.props.elements.map((element, index) => (
-            <Element key={index} name={element} />
+            <Element key={index} index={index} parIndex={this.props.index} removeElement={this.props.removeElement} name={element} />
           ))}
           <AddsElement
             parentIndex={this.props.index}
@@ -113,11 +119,32 @@ class List extends Component {
 }
 
 class Element extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.removeElement(this.props.parIndex, this.props.index);
+  }
+
   render() {
     return (
-      <div className="card mvs is-shadowless has-background-light">
-        <p className="has-text-left paxs ">{this.props.name} </p>
+      <div className="card mvm is-shadowless has-background-light">
+        <div className="columns">
+          <div className="column is-vcentered">
+            <p className="has-text-left plm"> {this.props.name} </p>
+          </div>
+          
+         <div className="column is-1 is-pulled-right mrl">
+            <form onSubmit={this.handleSubmit}>
+              <button type="submit" className="delete" />
+            </form>
+          </div>
+        </div>
       </div>
+      
     );
   }
 }
