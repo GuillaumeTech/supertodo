@@ -9,18 +9,25 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.addsElement = this.addsElement.bind(this);
+    this.addsList = this.addsList.bind(this);
     this.state = {
-      contents: [
-        { title: "Test1", elements: ["bla", "blo"] },
-        { title: "Test2", elements: ["bla", "test", "blo"] },
-        { title: "Test3", elements: ["bla", "blo"] }
-      ]
+      contents: [ ]
     };
   }
 
   addsElement(i, text) {
     const contents = this.state.contents.slice();
     contents[i].elements = contents[i].elements.concat(text);
+    this.setState({ contents: contents });
+  }
+
+  addsList(text) {
+    let contents = this.state.contents.slice();
+    const list = {
+      title: text,
+      elements: []
+    };
+    contents = contents.concat(list)
     this.setState({ contents: contents });
   }
 
@@ -34,8 +41,8 @@ class App extends Component {
               SUPER <br /> TO-DO{" "}
             </p>
           </div>
-          <div className="column is-pulled-right is-4">
-            <AddsList />
+          <div className="column is-pulled-right is-5">
+            <AddsList addsList={this.addsList} />
           </div>
         </div>
 
@@ -87,15 +94,37 @@ class Element extends Component {
 }
 
 class AddsList extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = { text: "" };
+  }
+
+  handleChange(e) {
+    this.setState({ text: e.target.value });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.state.text !== "") {
+      this.props.addsList(this.state.text);
+      this.setState({ text: "" });
+      this.refs.newListField.value = "";
+    }
+  }
+
   render() {
     return (
-      <form onSubmit={this.props.addsList}>
+      <form onSubmit={this.handleSubmit}>
         <div className="field has-addons">
           <div className="control is-expanded is-medium">
             <input
-              className="input is-medium"
-              type="text"
-              placeholder="Add a list"
+               className="input is-medium"
+               onChange={this.handleChange}
+               type="text"
+               placeholder="Add a list"
+               ref="newListField"
             />
           </div>
           <div className="control">
@@ -121,10 +150,10 @@ class AddsElement extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    if (this.state.text != "") {
+    if (this.state.text !== "") {
       this.props.addsElement(this.props.parentIndex, this.state.text);
       this.setState({ text: "" });
-      this.refs.field.value=""
+      this.refs.newElementField.value = "";
     }
   }
 
@@ -138,11 +167,11 @@ class AddsElement extends Component {
               onChange={this.handleChange}
               type="text"
               placeholder="Add an element"
-              ref="field"
+              ref="newElementField"
             />
           </div>
           <div className="control ">
-            <button type="Submit" className="button is-info">
+            <button type="submit" className="button is-info">
               +
             </button>
           </div>
