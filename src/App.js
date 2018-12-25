@@ -10,8 +10,9 @@ class App extends Component {
     super(props);
     this.addsElement = this.addsElement.bind(this);
     this.addsList = this.addsList.bind(this);
+    this.removeList = this.removeList.bind(this);
     this.state = {
-      contents: [ ]
+      contents: []
     };
   }
 
@@ -27,8 +28,15 @@ class App extends Component {
       title: text,
       elements: []
     };
-    contents = contents.concat(list)
+    contents = contents.concat(list);
     this.setState({ contents: contents });
+  }
+
+  removeList(index) {
+    let contents = this.state.contents.slice();
+    contents.splice(index,1);
+    this.setState({ contents: contents });
+    console.log(contents);
   }
 
   render() {
@@ -54,6 +62,7 @@ class App extends Component {
               title={element.title}
               elements={element.elements}
               addsElement={this.addsElement}
+              removeList={this.removeList}
             />
           ))}
         </div>
@@ -63,13 +72,33 @@ class App extends Component {
 }
 
 class List extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+   
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.removeList(this.props.index)
+  }
+
   render() {
     return (
       <div className="column is-4">
         <div className="card pam">
-          <p className="pvs has-text-left title is-size-5">
-            {this.props.title}
-          </p>
+          <div className="columns is-vcentered ">
+          <div className="column">
+            <p className="pvs has-text-left title is-size-5">
+              {this.props.title}
+            </p>
+            </div>
+            <div className="column is-1 prl">
+            <form onSubmit={this.handleSubmit}>
+              <button type="submit" className="delete" />
+            </form>
+            </div>
+          </div>
           {this.props.elements.map((element, index) => (
             <Element key={index} name={element} />
           ))}
@@ -120,11 +149,11 @@ class AddsList extends Component {
         <div className="field has-addons">
           <div className="control is-expanded is-medium">
             <input
-               className="input is-medium"
-               onChange={this.handleChange}
-               type="text"
-               placeholder="Add a list"
-               ref="newListField"
+              className="input is-medium"
+              onChange={this.handleChange}
+              type="text"
+              placeholder="Add a list"
+              ref="newListField"
             />
           </div>
           <div className="control">
