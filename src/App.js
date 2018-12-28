@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import "./bulma.css";
+
 import "./App.css";
 import "./spacing.css";
 
